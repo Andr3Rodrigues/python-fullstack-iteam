@@ -5,6 +5,8 @@ Do fácil ao difícil: 5 desafios em contextos reais
 
 Curso de Capacitação Full Stack – ITEAM
 Professor: Msc. Hygo Sousa De Oliveira
+
+Aluno(a): Álefe Alves / Amanda de Brito
 =============================================================
 
 INSTRUÇÕES GERAIS:
@@ -80,17 +82,44 @@ DICA:
   }
 """
 
-# SUA SOLUÇÃO AQUI ↓↓↓
+# SUA SOLUÇÃO AQUI ↓↓↓ Feito por Amanda de Brito
+import math
 
-# OPERACOES_REGISTRY: dict = { ... }
+OPERACOES_REGISTRY = {
+    "soma": lambda a,b: a + b,
+    "subtracao": lambda a, b: a - b,
+    "multiplicacao": lambda a, b: a * b,
+    "divisao": lambda a, b: a / b, 
+    "potencia": lambda a, b: a ** b,
+    "modulo": lambda a, b: a % b,
+    "raiz": lambda a, b: math.sqrt(a) 
+}
 
-# def calcular_depois(operacao: str, a: float, b: float) -> float:
-#     ...
+def realizar_divisao(a: float, b: float) -> float:
+    if b == 0:
+        raise ZeroDivisionError("Divisão por zero.")
+    return a / b
 
-# print("\n[DEPOIS]")
-# print(calcular_depois("soma",          10, 3))
-# print(calcular_depois("multiplicacao", 10, 3))
-# print(calcular_depois("raiz",          16, 0))   # nova operação!
+OPERACOES_REGISTRY["divisao"] = realizar_divisao
+
+
+def calcular_depois(operacao: str, a: float, b: float) -> float:
+    funcao_operacao = OPERACOES_REGISTRY.get(operacao)
+    
+    if funcao_operacao is None:
+        raise ValueError(f"Operação desconhecida: {operacao}")
+        
+    return funcao_operacao(a, b)
+
+
+print("\n[DEPOIS]")
+print(calcular_depois("soma",10, 3))
+print(calcular_depois("subtracao",10, 3))  
+print(calcular_depois("multiplicacao", 10, 3))
+print(calcular_depois("divisao", 10, 5))
+print(calcular_depois("potencia", 10, 2))
+print(calcular_depois("modulo", 10, 5))   
+print(calcular_depois("raiz",16, 0))
 
 
 # ==============================================================
@@ -157,7 +186,7 @@ DICA:
       def __contains__(self, chave): ...
 """
 
-# SUA SOLUÇÃO AQUI ↓↓↓
+# SUA SOLUÇÃO AQUI ↓↓↓ 
 
 # class Registry: ...
 
@@ -273,7 +302,140 @@ DICA sobre o decorator:
       ...
 """
 
-# SUA SOLUÇÃO AQUI ↓↓↓
+# SUA SOLUÇÃO AQUI ↓↓↓ Feito por Álefe Alves
+
+class Registry:
+    ""
+    def __init__(self, nome: str = "Registry") -> None:
+        self._store: dict = {}
+        self._nome  = nome
+
+    def register(self, chave: str, valor) -> None:
+        """
+        Registra um par chave → valor.
+
+        Raises:
+            ValueError: se a chave já estiver registrada.
+        """
+        if chave in self._store:
+            raise ValueError(
+                f"[{self._nome}] Chave '{chave}' já registrada. "
+                f"Use update() para sobrescrever explicitamente."
+            )
+        self._store[chave] = valor
+        print(f"  ✅ [{self._nome}] '{chave}' registrado.")
+
+    def get(self, chave: str):
+        """
+        Recupera o valor associado à chave.
+
+        Raises:
+            KeyError: se a chave não existir.
+        """
+        if chave not in self._store:
+            raise KeyError(
+                f"[{self._nome}] Chave '{chave}' não encontrada. "
+                f"Disponíveis: {self.listar_chaves()}"
+            )
+        return self._store[chave]
+
+    def update(self, chave: str, valor) -> None:
+        """Sobrescreve um registro existente (ex.: feature flags)."""
+        self._store[chave] = valor
+        print(f"  🔄 [{self._nome}] '{chave}' atualizado.")
+
+    def unregister(self, chave: str) -> None:
+        """Remove um registro do dicionário."""
+        if chave not in self._store:
+            raise KeyError(f"[{self._nome}] '{chave}' não encontrado.")
+        del self._store[chave]
+        print(f"  🗑️  [{self._nome}] '{chave}' removido.")
+
+    def listar_chaves(self) -> list[str]:
+        """Retorna a lista de todas as chaves registradas."""
+        return list(self._store.keys())
+
+    def __contains__(self, chave: str) -> bool:
+        """Permite usar `if chave in registry:` naturalmente."""
+        return chave in self._store
+
+    def __repr__(self) -> str:
+        return f"Registry(nome={self._nome!r}, chaves={self.listar_chaves()})"
+    
+validador_registry = Registry()
+
+def registrar_validador(tipo: str):
+    def decorator(func):
+        validador_registry.register(tipo, func)
+        return func
+    return decorator
+
+@registrar_validador("email")
+def validar_email(valor) -> tuple[bool, str]:
+    valido = "@" in str(valor) and "." in str(valor).split("@")[-1]
+    return (valido, "" if valido else "Email inválido: falta @ ou domínio")
+
+@registrar_validador("cpf")
+def validar_cpf(valor) -> tuple[bool, str]:
+    digitos = "".join(c for c in str(valor) if c.isdigit())
+    valido  = len(digitos) == 11
+    return (valido, "" if valido else f"CPF inválido: esperado 11 dígitos, got {len(digitos)}")
+
+@registrar_validador("telefone")
+def validar_telefone(valor) -> tuple[bool, str]:
+    digitos = "".join(c for c in str(valor) if c.isdigit())
+    valido  = len(digitos) in (10, 11)
+    return (valido, "" if valido else "Telefone inválido: esperado 10 ou 11 dígitos")
+
+@registrar_validador("cep")
+def validar_cep(valor) -> tuple[bool, str]:
+        digitos = "".join(c for c in str(valor) if c.isdigit())
+        valido  = len(digitos) == 8
+        return (valido, "" if valido else "CEP inválido: esperado 8 dígitos")
+
+@registrar_validador("idade")
+def validar_idade(valor):
+    try:
+        idade  = int(valor)
+        valido = 0 <= idade <= 120
+        return (valido, "" if valido else f"Idade inválida: {idade} fora de [0, 120]")
+    except (ValueError, TypeError):
+        return (False, f"Idade inválida: '{valor}' não é inteiro")
+    
+@registrar_validador("nome")
+def validar_nome(valor):
+    valido = isinstance(valor, str) and len(valor.strip()) >= 2
+    return (valido, "" if valido else "Nome inválido: mínimo 2 caracteres")
+
+@registrar_validador("url")
+def validar_url(valor):
+    valido = ("http://" in str(valor) or "https://" in str(valor)) and "." in str(valor)
+    return (valido, "" if valido else "URL inválida: Falta http:// ou https:// e deve ter .")
+
+
+def validar_campo_depois(tipo: str, valor) -> tuple[bool, str]: 
+    handler = validador_registry.get(tipo)
+    return handler(valor)
+
+
+print("\n[DEPOIS]")
+casos = [
+    ("email",    "ana@iteam.com"),
+    ("email",    "invalido_sem_arroba"),
+    ("cpf",      "123.456.789-01"),
+    ("cpf",      "123"),
+    ("telefone", "(92) 98765-4321"),
+    ("idade",    25),
+    ("idade",    200),
+    ("cep",      "69000-000"),
+    ("url",      "https://www.instagram.com/"),
+    ("url",      "htt://www.instagram.com/"),
+]
+for tipo, valor in casos:
+    ok, msg = validar_campo_depois(tipo, valor)
+    status  = "✅" if ok else "❌"
+    print(f"  {status} {tipo:10} | {str(valor):25} | {msg or 'OK'}")
+
 
 
 # ==============================================================
@@ -564,9 +726,9 @@ Para cada atividade, verifique:
   [ ] Exceções são tratadas explicitamente (KeyError / ValueError)
   [ ] O código está comentado e legível
 
-Atividade 1 — Calculadora         [ ] Concluído
+Atividade 1 — Calculadora         [ x ] Concluído
 Atividade 2 — Relatórios          [ ] Concluído
-Atividade 3 — Validação (deco.)   [ ] Concluído
+Atividade 3 — Validação (deco.)   [ x ] Concluído
 Atividade 4 — Descontos (engine)  [ ] Concluído
 Atividade 5 — Eventos (completo)  [ ] Concluído
 
