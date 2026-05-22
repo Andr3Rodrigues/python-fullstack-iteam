@@ -108,12 +108,13 @@ def calcular_desconto_depois(carrinho):
 
 # ---------------- Teste ----------------
 
-carrinho = Carrinho(
-    valor_total=600,
-    cupom=None,
-    tipo_cliente="vip",
-    dia_semana=1,
-    quantidade_itens=5
-)
+if __name__ == "__main__":
+    carrinho = Carrinho(
+        valor_total=600,
+        cupom=None,
+        tipo_cliente="vip",
+        dia_semana=1,
+        quantidade_itens=5
+    )
 
-print(calcular_desconto_depois(carrinho))
+    print(calcular_desconto_depois(carrinho))

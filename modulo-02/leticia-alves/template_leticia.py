@@ -103,7 +103,7 @@ def ex04_contador_regressivo():
     # SUA SOLUÇÃO AQUI
     num = int(input("Digite um número inteiro positivo para a contagem regressiva: "))
     while num >= 0:
-        print(num, end=" \n")
+        print(num, end=" ")
         num -= 1
     print("🚀 Lançamento!")
 
@@ -142,13 +142,14 @@ def ex06_filtro_continue():
     ignorados = 0
 
     for leitura in leituras:
-        if leitura == None:
+        if leitura is None:
             ignorados += 1
             continue
 
         soma += leitura
 
-    media = soma / (len(leituras) - ignorados)
+    validas = len(leituras) - ignorados
+    media = soma / validas if validas > 0 else 0
 
     print(f'A soma é: {soma}')
     print(f'A media é: {media}')
@@ -171,18 +172,22 @@ def ex07_validacao_nota():
         < 5.0      → D – Insuficiente
     """
     # SUA SOLUÇÃO AQUI
-    nota = float(input("Digite a nota do aluno (0.0 a 10.0): "))
-    
-    if 0.0 <= nota <= 10.0:
-        if nota >= 9.0:
-            print("A – Excelente")
-        elif nota >= 7.0:
-            print("B – Bom")
-        elif nota >= 5.0:
-            print("C – Regular")
-        else:
-            print("D – Insuficiente")
-        
+    while True:
+        nota = float(input("Digite a nota do aluno (0.0 a 10.0): "))
+
+        if 0.0 <= nota <= 10.0:
+            break
+
+        print("Nota inválida. Digite um valor entre 0.0 e 10.0.")
+
+    if nota >= 9.0:
+        print("A – Excelente")
+    elif nota >= 7.0:
+        print("B – Bom")
+    elif nota >= 5.0:
+        print("C – Regular")
+    else:
+        print("D – Insuficiente")
 
 # ==============================================================
 # EXERCÍCIO 08 – Calculadora com try/except
@@ -202,25 +207,21 @@ def ex08_calculadora_segura():
 
         if op == "+":
             r = n1 + n2
-
         elif op == "-":
             r = n1 - n2
-
         elif op == "*":
             r = n1 * n2
-
         elif op == "/":
             r = n1 / n2
-
         else:
-            print("Operação inválida")
+            raise ValueError("Operação inválida")
 
-    except:
-        print("Erro")
-
+    except ValueError:
+        print("Erro de valor")
+    except ZeroDivisionError:
+        print("Erro de divisão por zero")
     else:
         print(r)
-
     finally:
         print("Fim")
 

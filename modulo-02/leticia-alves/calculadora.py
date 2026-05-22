@@ -55,17 +55,18 @@ class Radiciacao:
 # ---------------- CALCULADORA ---------------- #
 def calcular(operacao: str, a: float, b: float = None):
     if operacao not in calculadora_operacoes:
-        return f"Operação {operacao} inválida!!"
+        raise ValueError(f"Operação {operacao} inválida!!")
     
     classe_op = calculadora_operacoes[operacao]()
     return classe_op.executar(a,b)
 
 # ---------------- TESTES ---------------- #
 
-print(calcular("soma", 10, 10))
-print(calcular("subtracao", 10, 3))
-print(calcular("multiplicacao", 9, 3))
-print(calcular("potenciacao", 2, 3))
-print(calcular("raiz", 25))
+if __name__ == "__main__":
+    print(calcular("soma", 10, 10))
+    print(calcular("subtracao", 10, 3))
+    print(calcular("multiplicacao", 9, 3))
+    print(calcular("potenciacao", 2, 3))
+    print(calcular("raiz", 25))
 
-# print(calcular("divisao", 10, 0))
+    # print(calcular("divisao", 10, 0))

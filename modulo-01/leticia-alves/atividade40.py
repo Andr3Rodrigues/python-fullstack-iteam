@@ -12,12 +12,17 @@ def carregar() -> list[dict]:
     Returns:
         list[dict]: Uma lista contendo os dicionários dos alunos.
             Retorna uma lista vazia se o arquivo não existir.
+
+    Raises:
+        ValueError: Se o arquivo JSON existir, mas estiver inválido.
     """
     try:
         with open(ARQUIVO, "r") as f:
             return json.load(f)
-    except:
+    except FileNotFoundError:
         return []
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"Arquivo JSON inválido: {ARQUIVO}") from exc
 
 
 def salvar(alunos: list[dict]) -> None:
