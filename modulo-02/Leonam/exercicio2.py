@@ -70,11 +70,11 @@ def ex02_validador_acesso():
 
     if usuario == "admin":
         if senha == "iteam2025":
-            print("🔓 Acesso concedido! Bem-vindo ao sistema.")
+            print(" Acesso concedido! Bem-vindo ao sistema.")
         else:
-            print("❌ Falha no acesso: Senha incorreta.")
+            print(" Falha no acesso: Senha incorreta.")
     else:
-        print("❌ Falha no acesso: Usuário não cadastrado.")
+        print(" Falha no acesso: Usuário não cadastrado.")
 
 
 # ==============================================================
@@ -114,7 +114,7 @@ def ex04_contador_regressivo():
         while contador >= 0:
             print(contador, end="... " if contador > 0 else " ")
             contador -= 1
-        print("🚀 Lançamento!")
+        print(" Lançamento!")
     except ValueError:
         print("Erro: Forneça um número inteiro válido.")
 
@@ -297,9 +297,9 @@ def ex10_jogo_adivinhacao():
                 print(f"🏆 Parabéns! Você acertou. O número era mesmo {numero_secreto}!")
                 return
             elif palpite < numero_secreto:
-                print("🔼 Errou! O número secreto é MAIOR.")
+                print(" Errou! O número secreto é MAIOR.")
             else:
-                print("🔽 Errou! O número secreto é MENOR.")
+                print(" Errou! O número secreto é MENOR.")
                 
             tentativas_restantes -= 1
         except ValueError:
@@ -335,9 +335,9 @@ def ex11_numero_primo():
                 break
 
         if eh_primo:
-            print(f"✅ {n} é um número primo!")
+            print(f" {n} é um número primo!")
         else:
-            print(f"❌ {n} NÃO é um número primo (divisível por {i}).")
+            print(f"Recusado{n} NÃO é um número primo (divisível por {i}).")
             
     except ValueError:
         print("Erro: Forneça uma entrada numérica inteira válida.")
@@ -379,17 +379,17 @@ def ex12_analisador_senha():
             c_especial = True
 
     print("\n=== RELATÓRIO DE SEGURANÇA ===")
-    print(f"{'✅' if c_tamanho else '❌'} Mínimo de 8 caracteres")
-    print(f"{'✅' if c_maiuscula else '❌'} Pelo menos 1 letra maiúscula")
-    print(f"{'✅' if c_minuscula else '❌'} Pelo menos 1 letra minúscula")
-    print(f"{'✅' if c_digito else '❌'} Pelo menos 1 dígito numérico")
-    print(f"{'✅' if c_especial else '❌'} Pelo menos 1 caractere especial (!@#$%^&*)")
+    print(f"{'aceito' if c_tamanho else 'Recusado'} Mínimo de 8 caracteres")
+    print(f"{'aceito' if c_maiuscula else 'Recusado'} Pelo menos 1 letra maiúscula")
+    print(f"{'aceito' if c_minuscula else 'Recusado'} Pelo menos 1 letra minúscula")
+    print(f"{'aceito' if c_digito else 'Recusado'} Pelo menos 1 dígito numérico")
+    print(f"{'aceito' if c_especial else 'Recusado'} Pelo menos 1 caractere especial (!@#$%^&*)")
     print("==============================")
 
     if c_tamanho and c_maiuscula and c_minuscula and c_digito and c_especial:
-        print("🔒 Status: SENHA FORTE")
+        print(" Status: SENHA FORTE")
     else:
-        print("⚠️ Status: SENHA FRACA. Corrija os pontos marcados com ❌.")
+        print(" Status: SENHA FRACA. Corrija os pontos marcados com Recusado.")
 
 
 # ==============================================================
@@ -448,11 +448,11 @@ def ex14_leitura_notas_turma():
         try:
             nota = float(entrada)
             if not (0.0 <= nota <= 10.0):
-                print("⚠️ Aviso: Nota fora da escala permitida (0.0 a 10.0). Ignorada.")
+                print(" Aviso: Nota fora da escala permitida (0.0 a 10.0). Ignorada.")
                 continue
             notas.append(nota)
         except ValueError:
-            print("⚠️ Entrada inválida. Digite uma nota numérica válida ou a palavra 'fim'.")
+            print(" Entrada inválida. Digite uma nota numérica válida ou a palavra 'fim'.")
             continue
 
     if not notas:
@@ -538,7 +538,7 @@ def ex15_menu_sistema():
             if tam_valido and tem_digito:
                 print("🔒 Senha aceitável (Mínimo de 6 caracteres e possui número).")
             else:
-                print("❌ Senha rejeitada. Deve ter pelo menos 6 caracteres e conter 1 dígito.")
+                print("Recusado Senha rejeitada. Deve ter pelo menos 6 caracteres e conter 1 dígito.")
 
         elif opcao == 4:
             print("\n[Subsistema] Calculadora Básica Segura")
